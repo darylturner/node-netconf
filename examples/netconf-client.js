@@ -1,11 +1,10 @@
-var netconf = require('./netconf');
+var netconf = require('../netconf');
 var util = require('util');
 var fs = require('fs');
 var process = require('process');
 var hb = require('handlebars');
 
 var router = new netconf.Client('192.168.56.101', 22, 'daryl', 'Juniper');
-//router.log.level('debug');
 
 var data = '';
 process.stdin.on('data', function (chunk) {
