@@ -3,7 +3,7 @@ var parseXML = require('xml2js').parseString;
 var Builder = require('xml2js').Builder;
 
 var delim = ']]>]]>';
-var message_re = /(\<rpc\-reply.*message\-id="(\d*)"[\s\S]*\<\/rpc\-reply\>)\n\]\]\>\]\]\>/;
+var message_re = /(<rpc\-reply.*message\-id="(\d*)"[\s\S]*<\/rpc\-reply\>)\n\]\]\>\]\]\>/;
 
 function Client(host, port, username, password) {
     this.host = host;
@@ -36,9 +36,9 @@ Client.prototype = {
             var rcvbuffer = '';
             self.netconf.on('data', function manageBuffer(chunk) {
                 rcvbuffer += chunk;
-                if (rcvbuffer.search(message_re) != -1) {
+                if (rcvbuffer.search(message_re) !== -1) {
                     var message = rcvbuffer.match(message_re);
-                    if (message[2] == message_id) {
+                    if (parseInt(message[2]) === message_id) {
                         self.parse(message[1], callback);
                         self.netconf.removeListener('data', manageBuffer);
                     } else {
