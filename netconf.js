@@ -3,6 +3,7 @@ var parseXML = require('xml2js').parseString;
 var Builder = require('xml2js').Builder;
 
 var delim = ']]>]]>';
+var message_re = /(\<rpc\-reply.*message\-id="(\d*)"[\s\S]*\<\/rpc\-reply\>)\n\]\]\>\]\]\>/;
 
 function Client(host, port, username, password) {
     this.host = host;
@@ -11,31 +12,38 @@ function Client(host, port, username, password) {
     this.password = password;
 
     this.connected = false;
-    this.message_id = 100;
-    this.rcvbuffer = '';
+    this.session_id = null;
+    this.remote_capabilities = [];
+    this.id_counter = 100;
+    this.clientbuffer = '';
 }
 Client.prototype = {
     rpc: function(request, args, callback) {
+        var message_id = this.id_counter += 1;
         var object = {
             'rpc': {
-                '$': {'message-id': this.message_id},
+                '$': {'message-id': message_id},
                 [request] : args
             }
         };
         var builder = new Builder();
         var xml = builder.buildObject(object) + '\n' + delim;
-        this.message_id += 1;
-        this.send(xml, callback);
+        this.send(xml, message_id, callback);
     },
-    send: function(xml, callback) {
+    send: function(xml, message_id, callback) {
         var self = this;
-        this.netconf.write(xml, function startHandler() {
-            self.netconf.on('data', function handleReply(chunk) {
-                self.rcvbuffer += chunk;
-                if (self.rcvbuffer.match(delim)) {
-                    self.parse(self.rcvbuffer, callback);
-                    self.rcvbuffer = '';
-                    self.netconf.removeListener('data', handleReply);
+        this.netconf.write(xml, function startListening() {
+            var rcvbuffer = '';
+            self.netconf.on('data', function manageBuffer(chunk) {
+                rcvbuffer += chunk;
+                if (rcvbuffer.search(message_re) != -1) {
+                    var message = rcvbuffer.match(message_re);
+                    if (message[2] == message_id) {
+                        self.parse(message[1], callback);
+                        self.netconf.removeListener('data', manageBuffer);
+                    } else {
+                        rcvbuffer = rcvbuffer.replace(message_re, '');
+                    }
                 }
             });
         });
@@ -64,14 +72,24 @@ Client.prototype = {
                 if (!err) {
                     self.netconf = stream;
                     stream.on('data', function handleHello(chunk) {
-                        self.rcvbuffer += chunk;
-                        if (self.rcvbuffer.match(delim)) {
-                            self.parse(self.rcvbuffer, callback);
-                            self.rcvbuffer = '';
+                        self.clientbuffer += chunk;
+                        if (self.clientbuffer.match(delim)) {
+                            self.parse(self.clientbuffer, function(err, message) {
+                                if (!err) {
+                                    self.remote_capabilities = message.hello.capabilities.capability;
+                                    self.session_id = message.hello.session_id;
+                                    self.connected = true;
+                                    callback();
+                                } else {
+                                    throw(err);
+                                }
+                            });
+                            self.clientbuffer = '';
                             stream.removeListener('data', handleHello);
                         }
                     }).on('error', function(err) {
-                        throw err;
+                        self.close();
+                        throw(err);
                     });
                     self.hello();
                 }

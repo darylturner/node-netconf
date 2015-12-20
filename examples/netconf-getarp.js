@@ -1,4 +1,4 @@
-var netconf = require('./netconf');
+var netconf = require('../netconf');
 var util = require('util');
 
 var router = new netconf.Client('192.168.56.101', 22, 'daryl', 'Juniper');
