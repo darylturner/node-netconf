@@ -5,11 +5,12 @@ var Builder = require('xml2js').Builder;
 var delim = ']]>]]>';
 var message_re = /(<rpc\-reply.*message\-id="(\d*)"[\s\S]*<\/rpc\-reply\>)\n\]\]\>\]\]\>/;
 
-function Client(host, port, username, password) {
-    this.host = host;
-    this.port = port;
-    this.username = username;
-    this.password = password;
+function Client(params) {
+    this.host = params.host;
+    this.username = params.username;
+    this.port = params.port || 22;
+    this.password = params.password;
+    this.pkey = params.pkey;
 
     this.connected = false;
     this.session_id = null;
@@ -97,7 +98,9 @@ Client.prototype = {
         }).connect({
             host: this.host,
             username: this.username,
-            password: this.password
+            password: this.password,
+            port: this.port,
+            privateKey: this.pkey
         });
     },
     close: function() {

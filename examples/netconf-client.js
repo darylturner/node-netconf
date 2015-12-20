@@ -4,7 +4,12 @@ var fs = require('fs');
 var process = require('process');
 var hb = require('handlebars');
 
-var router = new netconf.Client('192.168.56.101', 22, 'daryl', 'Juniper');
+var params = {
+    host: '192.168.56.101',
+    username: 'vagrant',
+    pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
+};
+var router = new netconf.Client(params);
 
 var data = '';
 process.stdin.on('data', function (chunk) {

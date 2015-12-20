@@ -1,7 +1,14 @@
 var netconf = require('../netconf');
 var util = require('util');
+var fs = require('fs');
 
-var router = new netconf.Client('192.168.56.101', 22, 'daryl', 'Juniper');
+var params = {
+    host: '192.168.56.101',
+    username: 'vagrant',
+    pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
+};
+var router = new netconf.Client(params);
+
 router.open(function afterOpen(err) {
     if (!err) {
         router.rpc('get-arp-table-information', null, processResults); 

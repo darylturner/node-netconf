@@ -1,11 +1,18 @@
 var netconf = require('../netconf');
 var util = require('util');
 var process = require('process');
+var fs = require('fs');
 
 // example of multiple async requests
 var results = 0;
 
-var router = new netconf.Client('192.168.56.101', 22, 'daryl', 'Juniper');
+var params = {
+    host: '192.168.56.101',
+    username: 'vagrant',
+    pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
+};
+var router = new netconf.Client(params);
+
 router.open(function afterOpen(err) {
     if (!err) {
         console.log('request 1');

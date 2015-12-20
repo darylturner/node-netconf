@@ -6,7 +6,7 @@ var data = '';
 process.stdin.on('data', function (chunk) {
     data += chunk;
 }).on('end', function () {
-    render(JSON.parse(data), 'template.hb');
+    render(JSON.parse(data), process.argv[2]);
 });
 
 function render(data, template_file) {
