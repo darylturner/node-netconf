@@ -5,7 +5,7 @@ var process = require('process');
 var hb = require('handlebars');
 
 var params = {
-    host: '192.168.56.101',
+    host: '172.28.128.4',
     username: 'vagrant',
     pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
 };
