@@ -5,6 +5,11 @@ var Builder = require('xml2js').Builder;
 var delim = ']]>]]>';
 var message_re = /(<rpc\-reply.*message\-id="(\d*)"[\s\S]*<\/rpc\-reply\>)\n\]\]\>\]\]\>/;
 
+function objectHelper(name) {
+    // replaces characters that prevent dot-style object navigation.
+    return name.replace(/-|:/g, '_');
+}
+
 function Client(params) {
     this.host = params.host;
     this.username = params.username;
@@ -62,8 +67,13 @@ Client.prototype = {
         this.netconf.write(xml);
     },
     parse: function(response, callback) {
-        var xml = response.replace(delim, '').replace(/\-/g, '_');
-        parseXML(xml, {trim: true, explicitArray: false}, callback);
+        var xml = response.replace(delim, '');
+        parseXML(xml, {
+            trim: true,
+            explicitArray: false,
+            tagNameProcessors: [objectHelper],
+            attrNameProcessors: [objectHelper]},
+            callback);
     },
     open: function(callback) {
         var self = this;
@@ -111,10 +121,10 @@ Client.prototype = {
 // Utility functions.
 // Wrappers around RPC calls.
 Client.prototype.load = function(config, callback) {
-    this.rpc('load-configuration action="merge" format="text"', {'configuration-text': config}, callback);              
+    this.rpc('load-configuration action="merge" format="text"', {'configuration-text': config}, callback);
 };
 Client.prototype.commit = function(callback) {
-    this.rpc('commit-configuration', null, callback);              
+    this.rpc('commit-configuration', null, callback);
 };
 
 module.exports.Client = Client;
