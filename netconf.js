@@ -126,5 +126,16 @@ Client.prototype.load = function(config, callback) {
 Client.prototype.commit = function(callback) {
     this.rpc('commit-configuration', null, callback);
 };
+Client.prototype.compare = function(callback) {
+    this.rpc('get-configuration compare="rollback" format="text"',
+              null,
+              function(err, reply) {
+                  var text = reply.rpc_reply.configuration_information.configuration_output;
+                  callback(null, text);
+              });
+};
+Client.prototype.rollback = function(callback) {
+    this.rpc('discard-changes', null, callback);
+};
 
 module.exports.Client = Client;
