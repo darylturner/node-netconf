@@ -24,6 +24,8 @@ function Client(params) {
     this.clientbuffer = '';
 }
 Client.prototype = {
+    // Core NETCONF functions. For extending with utility functions
+    // see below. May break out into seperate class and inherit.
     rpc: function(request, args, callback) {
         var message_id = this.id_counter += 1;
         var object = {
@@ -48,6 +50,7 @@ Client.prototype = {
                         self.parse(message[1], callback);
                         self.netconf.removeListener('data', manageBuffer);
                     } else {
+                        // this is not the message you are looking for...
                         rcvbuffer = rcvbuffer.replace(message_re, '');
                     }
                 }
@@ -73,7 +76,21 @@ Client.prototype = {
             explicitArray: false,
             tagNameProcessors: [objectHelper],
             attrNameProcessors: [objectHelper]},
-            callback);
+            function checkRPCErrors(err, message) {
+                if (message.hasOwnProperty('hello')) {
+                    callback(null, message);
+                } else {
+                    if (err) { //xml parsing error.
+                        callback(err, null);
+                    } else {
+                        if (message.rpc_reply.hasOwnProperty('rpc_error')) {
+                            callback(new Error('RPC error'), message);
+                        } else {
+                            callback(null, message);
+                        }
+                    }
+                }
+            });
     },
     open: function(callback) {
         var self = this;
@@ -87,11 +104,15 @@ Client.prototype = {
                         if (self.clientbuffer.match(delim)) {
                             self.parse(self.clientbuffer, function completeExchange(err, message) {
                                 if (!err) {
-                                    self.remote_capabilities = message.hello.capabilities.capability;
-                                    self.session_id = message.hello.session_id;
-                                    self.connected = true;
-                                    self.hello();
-                                    callback(null);
+                                    if (message.hello.session_id > 0) {
+                                        self.remote_capabilities = message.hello.capabilities.capability;
+                                        self.session_id = message.hello.session_id;
+                                        self.connected = true;
+                                        self.hello();
+                                        callback(null);
+                                    } else {
+                                        callback(new Error('NETCONF session not established'));
+                                    }
                                 } else {
                                     callback(err);
                                 }
@@ -121,7 +142,22 @@ Client.prototype = {
 // Utility functions.
 // Wrappers around RPC calls.
 Client.prototype.load = function(config, callback) {
-    this.rpc('load-configuration action="merge" format="text"', {'configuration-text': config}, callback);
+    this.rpc('load-configuration action="merge" format="text"',
+             {'configuration-text': config},
+             function checkLoadErrors(err, reply) {
+                 // load errors aren't found in the top-level reply so
+                 // need to check seperately.
+                 if (err) {
+                     callback(err);
+                 } else {
+                     var rpc_error = reply.rpc_reply.load_configuration_results.hasOwnProperty('rpc_error');
+                     if (rpc_error) {
+                        callback(new Error('RPC error'), reply);
+                    } else {
+                        callback(null, reply);
+                    }
+                 }
+             });
 };
 Client.prototype.commit = function(callback) {
     this.rpc('commit-configuration', null, callback);
@@ -129,9 +165,13 @@ Client.prototype.commit = function(callback) {
 Client.prototype.compare = function(callback) {
     this.rpc('get-configuration compare="rollback" format="text"',
               null,
-              function(err, reply) {
-                  var text = reply.rpc_reply.configuration_information.configuration_output;
-                  callback(null, text);
+              function parseDiff(err, reply) {
+                  if (err) {
+                      callback(err, reply);
+                  } else {
+                      var text = reply.rpc_reply.configuration_information.configuration_output;
+                      callback(null, text);
+                  }
               });
 };
 Client.prototype.rollback = function(callback) {
