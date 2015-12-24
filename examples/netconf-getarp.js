@@ -2,6 +2,10 @@ var netconf = require('../netconf');
 var util = require('util');
 var fs = require('fs');
 
+function pprint(object) {
+    console.log(util.inspect(object, {depth:null, colors:true}));
+}
+
 var params = {
     host: '172.28.128.4',
     username: 'vagrant',
@@ -11,14 +15,20 @@ var router = new netconf.Client(params);
 
 router.open(function afterOpen(err) {
     if (!err) {
-        router.rpc('get-arp-table-information', null, processResults); 
+        // router.rpc('get-arp-table-info', null, processResults);
+        router.rpc('get-arp-table-information', null, processResults);
     } else {
         throw err;
     }
 });
 
 function processResults(err, reply) {
-    var arpInfo = reply.rpc_reply.arp_table_information.arp_table_entry;
-    console.log(util.inspect(arpInfo, {depth:null, colors: true}));
-    router.close();
+    if (err) {
+        pprint(reply);
+        throw err;
+    } else {
+        var arpInfo = reply.rpc_reply.arp_table_information.arp_table_entry;
+        console.log(JSON.stringify(arpInfo));
+        router.close();
+    }
 }
