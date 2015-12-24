@@ -78,31 +78,31 @@ Client.prototype = {
     open: function(callback) {
         var self = this;
         this.sshConn = ssh.Client();
-        this.sshConn.on('ready', function() {
-            self.sshConn.subsys('netconf', function(err, stream) {
+        this.sshConn.on('ready', function invokeNETCONF() {
+            self.sshConn.subsys('netconf', function exchangeHellos(err, stream) {
                 if (!err) {
                     self.netconf = stream;
                     stream.on('data', function handleHello(chunk) {
                         self.clientbuffer += chunk;
                         if (self.clientbuffer.match(delim)) {
-                            self.parse(self.clientbuffer, function(err, message) {
+                            self.parse(self.clientbuffer, function completeExchange(err, message) {
                                 if (!err) {
                                     self.remote_capabilities = message.hello.capabilities.capability;
                                     self.session_id = message.hello.session_id;
                                     self.connected = true;
-                                    callback();
+                                    self.hello();
+                                    callback(null);
                                 } else {
-                                    throw(err);
+                                    callback(err);
                                 }
                             });
                             self.clientbuffer = '';
                             stream.removeListener('data', handleHello);
                         }
-                    }).on('error', function(err) {
+                    }).on('error', function streamErr(err) {
                         self.close();
-                        throw(err);
+                        throw (err);
                     });
-                    self.hello();
                 }
             });
         }).connect({
