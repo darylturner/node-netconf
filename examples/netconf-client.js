@@ -1,8 +1,49 @@
-var netconf = require('../netconf');
-var util = require('util');
+#!/opt/pkg/bin/node
 var fs = require('fs');
 var process = require('process');
-var hb = require('handlebars');
+var netconf = require('../netconf');
+var pipeline = require('./pipeline');
+
+function configureRouter(config) {
+    router.open(function(err) {
+        if (!err) {
+            router.load(config, commitConf);
+        } else {
+            throw(err);
+        }
+    });
+}
+
+function commitConf(err, reply) {
+    if (!err) {
+        router.compare(function(err, reply) {
+            console.log('Configuration Diff:');
+            console.log(reply);
+            if (process.argv[2] === '-n') {
+                commitRollback(false);
+            } else {
+                commitRollback(true);
+            }
+        });
+    } else {
+        throw(err);
+    }
+}
+
+function commitRollback(value) {
+    if (value === true) {
+        console.log('Commiting configuration');
+        router.commit(function(err, result) {
+           router.close();
+        });
+    } else { 
+        console.log('Rolling back changes');
+        router.rollback(function(err, result) {
+            router.close();
+        });
+    }
+}
+
 
 var params = {
     host: '172.28.128.4',
@@ -11,43 +52,10 @@ var params = {
 };
 var router = new netconf.Client(params);
 
-var data = '';
-process.stdin.on('data', function (chunk) {
-    data += chunk;
-}).on('end', function () {
-    render(JSON.parse(data), 'template.hb');
-});
-
-function render(data, template_file) {
-    fs.readFile(template_file, function (err, buffer) {
-        if (!err) {
-            var template = hb.compile(buffer.toString());
-            var result = template(data);
-            configureRouter(result);
-        } else {
-            throw err;
-        }
-    });
-}
-
-function configureRouter(config) {
-    router.open(function afterOpen(err) {
-        if (!err) {
-            router.load(config, commitConf);
-        } else {
-            throw err;
-        }
-    });
-}
-
-function commitConf(err, reply) {
-    if (!err) {
-        router.commit(function resultAndClose(err, reply) {
-            console.log(util.inspect(reply, {depth:null, colors: true}));
-            console.log('commited');
-            router.close();
-        });
+pipeline.read(function renderTemplate(err, data) {
+    if (err) {
+       throw (err);
     } else {
-        throw err;
+        configureRouter(data);
     }
-}
+});

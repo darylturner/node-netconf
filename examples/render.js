@@ -1,13 +1,8 @@
-var hb = require('handlebars');
+#!/opt/pkg/bin/node
 var fs = require('fs');
 var process = require('process');
-
-var data = '';
-process.stdin.on('data', function (chunk) {
-    data += chunk;
-}).on('end', function () {
-    render(JSON.parse(data), process.argv[2]);
-});
+var hb = require('handlebars');
+var pipeline = require('./pipeline');
 
 function render(data, template_file) {
     fs.readFile(template_file, function (err, buffer) {
@@ -16,7 +11,15 @@ function render(data, template_file) {
             var result = template(data);
             console.log(result);
         } else {
-            throw err;
+            throw (err);
         }
     });
 }
+
+pipeline.read(function (err, data) {
+    if (!err) {
+        render(JSON.parse(data), process.argv[2]);
+    } else {
+        throw (err);
+    }
+});
