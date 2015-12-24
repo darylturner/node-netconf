@@ -1,0 +1,31 @@
+{
+  "name": "netconf",
+  "version": "0.1.0",
+  "description": "Pure JavaScript NETCONF library.",
+  "main": "lib/netconf.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darylturner/node-netconf.git"
+  },
+  "keywords": [
+    "xml-rpc",
+    "netconf",
+    "juniper"
+  ],
+  "author": { "name": "Daryl Turner", "email": "daryl@layer-eight.uk" },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/darylturner/node-netconf/issues"
+  },
+  "dependencies": {
+    "ssh2": ">=0.4.12",
+    "xml2js": ">=0.4.15"
+  },
+  "homepage": "https://github.com/darylturner/node-netconf#readme"
+}
