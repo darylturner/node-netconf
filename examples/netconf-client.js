@@ -1,7 +1,7 @@
 #!/opt/pkg/bin/node
 var fs = require('fs');
 var process = require('process');
-var netconf = require('../netconf');
+var netconf = require('../lib/netconf');
 var pipeline = require('./pipeline');
 var util = require('util');
 

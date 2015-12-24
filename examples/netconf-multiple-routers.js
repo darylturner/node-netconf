@@ -1,4 +1,4 @@
-var netconf = require('../netconf');
+var netconf = require('../lib/netconf');
 var util = require('util');
 var fs = require('fs');
 
