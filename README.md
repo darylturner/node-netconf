@@ -6,10 +6,10 @@ Managing the streams and events is taken care of by the module and exposes core 
 Multiple endpoints are supported and multiple asynchronous non-blocking requests can be made to each client.
 
 ## Installation
-Module can be manually installed by cloning repository or downloading directly from github.
-Requires the ssh2 and xml2js module which can be installed from npm.
 
-This module will be published to npm once ready.
+Published to npm.
+
+npm install netconf
 
 ## Usage
 Also please see examples for usage guidelines.
@@ -72,7 +72,7 @@ function (err) {...}
 
 ### Utility functions
 
-Utility functions for common JunOS operations have been added to make working with these devices easier. 
+Utility functions for common JunOS operations have been added to make working with these devices easier.
 
 Current utility functions implemented are:  
 commit, rollback, compare and load.
