@@ -7,7 +7,7 @@ function pprint(object) {
 }
 
 var params = {
-    host: '172.28.128.4',
+    host: '172.28.128.3',
     username: 'vagrant',
     pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
 };
