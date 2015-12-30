@@ -112,7 +112,7 @@ The default load options can be overridden by supplying an options object in the
 options = {
     config: configData, //required
     action: 'merge'|'replace'|'override'|'update'|'set', //default merge
-    format: 'text'|'set' //default text
+    format: 'text'|'xml' //default text
 };
 ```
 and called as such:
