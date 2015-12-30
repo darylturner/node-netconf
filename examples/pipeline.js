@@ -1,10 +1,13 @@
 module.exports.read = function (callback) {
     var data = '';
-    process.stdin.once('data', function(chunk) {
-        data += chunk;
-    }).once('end', function() {
+    process.stdin.on('readable', function() {
+        var chunk = process.stdin.read();
+        if (chunk != null) {
+            data += chunk;
+        }
+    }).on('end', function() {
         callback(null, data);
-    }).once('error', function(err) {
+    }).on('error', function(err) {
         callback(err, null);
     });
 };

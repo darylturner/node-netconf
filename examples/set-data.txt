@@ -1,0 +1,2 @@
+set interfaces ge-0/0/0 unit 0 description "set using data from set.txt"
+set interfaces ge-0/0/1 unit 0 description "set using data from set.txt"

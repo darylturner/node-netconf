@@ -9,10 +9,11 @@ function pprint(object) {
     console.log(util.inspect(object, {depth:null, colors:true}));
 }
 
-function configureRouter(config) {
+function configureRouter(configData) {
     router.open(function(err) {
         if (!err) {
-            router.load(config, commitConf);
+            router.load({config: configData, action: 'replace', format: 'text'},
+                         commitConf);
         } else {
             throw(err);
         }
