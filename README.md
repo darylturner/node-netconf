@@ -39,8 +39,7 @@ router.open(function onOpen(err) {
 The NETCONF session can then be opened using the .open() method.
 
 *Function*   
-router.open(callback);
-
+router.open(callback);  
 *Callback*  
 function (err) {...}
 
@@ -51,8 +50,7 @@ The callback function will be called once the SSH and NETCONF session has connec
 Requests are sent using the .rpc() method.
 
 *Function*  
-router.rpc('request', args, callback);
-
+router.rpc('request', args, callback);  
 *Callback*  
 function (err, reply) {...}
 
@@ -65,14 +63,59 @@ A message-id is automatically added to the request and the callback function wil
 The session can be gracefully closed using the .close() method.
 
 *Function*   
-router.close([callback]);
-
+router.close([callback]);  
 *Callback*  
 function (err) {...}
 
 ### Utility functions
 
 Utility functions for common JunOS operations have been added to make working with these devices easier.
+I'm happy to take pull requests for any added utility functions.
 
-Current utility functions implemented are:  
+Currently implemented are:
 commit, rollback, compare and load.
+
+**Commit**  
+Commit candidate configuration to device.
+
+*Function*  
+router.commit(callback);  
+*Callback*  
+function (err, reply) {...}
+
+**Rollback**  
+Discard candidate configuration on device.
+
+*Function*  
+router.rollback(callback);  
+*Callback*  
+function (err, reply) {...}
+
+**Compare**  
+Show difference between running and candidate-config. Equivalent to "show | compare".
+
+*Function*  
+router.compare(callback);  
+*Callback*  
+function (err, diff) {...}
+
+**Load**  
+Load configuration data into candidate-config using netconf. Default options are equivalent to "load merge" and would expect configuration data in JunOS curly-brace format.
+
+*Function*  
+router.load(configData, callback);  
+*Callback*  
+function (err, reply) {...}
+
+The default load options can be overridden by supplying an options object in the format:
+```JavaScript
+options = {
+    config: configData, //required
+    action: 'merge'|'replace'|'override'|'update'|'set', //default merge
+    format: 'text'|'set' //default text
+};
+```
+and called as such:
+
+*Function*  
+router.load(options, callback)
