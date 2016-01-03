@@ -11,8 +11,39 @@ Published to npm.
 
 npm install netconf
 
+## Example
+```JavaScript
+function pprint(object) {
+    console.log(util.inspect(object, {depth:null, colors:true}));
+}
+
+function processResults(err, reply) {
+    if (err) {
+        pprint(reply);
+        throw err;
+    } else {
+        var arpInfo = reply.rpc_reply.arp_table_information.arp_table_entry;
+        console.log(JSON.stringify(arpInfo));
+        router.close();
+    }
+}
+
+var router = new netconf.Client({
+    host: '172.28.128.3',
+    username: 'vagrant',
+    pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
+});
+
+router.open(function afterOpen(err) {
+    if (!err) {
+        router.rpc('get-arp-table-information', null, processResults);
+    } else {
+        throw err;
+    }
+});
+```
 ## Usage
-Also please see examples for usage guidelines.
+Checkout examples on github for more usage examples.
 
 ### Connecting to endpoint
 

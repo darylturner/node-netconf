@@ -6,22 +6,6 @@ function pprint(object) {
     console.log(util.inspect(object, {depth:null, colors:true}));
 }
 
-var params = {
-    host: '172.28.128.3',
-    username: 'vagrant',
-    pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
-};
-var router = new netconf.Client(params);
-
-router.open(function afterOpen(err) {
-    if (!err) {
-        // router.rpc('get-arp-table-info', null, processResults);
-        router.rpc('get-arp-table-information', null, processResults);
-    } else {
-        throw err;
-    }
-});
-
 function processResults(err, reply) {
     if (err) {
         pprint(reply);
@@ -32,3 +16,17 @@ function processResults(err, reply) {
         router.close();
     }
 }
+
+var router = new netconf.Client({
+    host: '172.28.128.4',
+    username: 'vagrant',
+    pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
+});
+
+router.open(function afterOpen(err) {
+    if (!err) {
+        router.rpc('get-arp-table-information', null, processResults);
+    } else {
+        throw err;
+    }
+});
