@@ -26,7 +26,7 @@
   "dependencies": {
     "ssh2": ">=0.4.12",
     "xml2js": ">=0.4.15",
-    "vasync": ">1.6.3"
+    "vasync": ">=1.6.3"
   },
   "homepage": "https://github.com/darylturner/node-netconf#readme"
 }
