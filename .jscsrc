@@ -1,0 +1,6 @@
+{
+	"preset": "node-style-guide",
+        "validateIndentation": 4,
+        "maximumLineLength": {"value": 100, "allExcept": ["regex"]},
+        "requireCamelCaseOrUpperCaseIdentifiers": {"ignoreProperties": true}
+}
