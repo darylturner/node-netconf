@@ -19,7 +19,7 @@ describe('core functions', function () {
         assert.ok(client.connected);
     });
     it('should receive remote capabilities', function () {
-        assert.ok(client.remoteCapabilities);
+        assert.ok(client.remoteCapabilities.length);
     });
     it('should be assigned a session id', function () {
         assert.ok(client.sessionID > 0);
