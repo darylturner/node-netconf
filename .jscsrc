@@ -1,6 +1,10 @@
 {
-	"preset": "node-style-guide",
-        "validateIndentation": 4,
+	"preset": "crockford",
+	"requireMultipleVarDecl": null,
+	"requireVarDeclFirst": null,
+        "disallowSpacesInsideArrayBrackets": null,
         "maximumLineLength": {"value": 100, "allExcept": ["regex"]},
-        "requireCamelCaseOrUpperCaseIdentifiers": {"ignoreProperties": true}
+        "requireCamelCaseOrUpperCaseIdentifiers": {"ignoreProperties": true},
+        "requireSpacesInsideObjectBrackets": "all",
+        "requireSpacesInsideArrayBrackets": "all"
 }
