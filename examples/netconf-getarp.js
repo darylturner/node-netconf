@@ -18,13 +18,15 @@ function processResults(err, reply) {
 }
 
 var router = new netconf.Client({
-    host: '172.28.128.4',
+    host: '172.28.128.3',
     username: 'vagrant',
     pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
 });
 
 router.open(function afterOpen(err) {
     if (!err) {
+        // console.log(router.remoteCapabilities);
+        // console.log(router.sessionID);
         router.rpc('get-arp-table-information', null, processResults);
     } else {
         throw err;
