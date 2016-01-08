@@ -24,15 +24,37 @@ describe('core functions', function () {
     it('should be assigned a session id', function () {
         assert.ok(client.sessionID > 0);
     });
-    it('should be able to send and receive rpc messages');
-    it('should be able to send and receive simultaneous rpc messages');
-    it('should close connection gracefully', function (done) {
-        client.close(function (err, reply) {
-            if (err) {
-                throw err;
-            }
-            return done();
+    it('should be able to send and receive rpc messages', function (done) {
+        client.rpc('get-software-information', null, function (err, reply) {
+            if (err) return done(err);
+            var platform = reply.rpc_reply.software_information.package_information.name;
+            return done(assert.ok(platform === 'junos'));
         });
+    });
+    it('should be able to send and receive simultaneous rpc messages', function(done) {
+        var interfaces = [ 'ge-0/0/0', 'ge-0/0/1' ];
+        var results = 0;
+        interfaces.forEach(function (int) {
+            client.rpc('get-interface-information',
+                { 'interface-name': [ int ], 'media': { } },
+                function (err, reply) {
+                    if (err) return done(err);
+                    results += 1;
+                    try {
+                        var returnedInt = reply.rpc_reply.interface_information.physical_interface.name;
+                        assert.ok(returnedInt === int);
+                    } catch (e) {
+                        return done(e);
+                    }
+                    if (results === interfaces.length) {
+                        done();
+                    }
+                }
+            );
+        });
+    });
+    after(function closeConnection(done) {
+        client.close(done);
     });
     // after(function vagrantStop() { ... });
 });
