@@ -1,6 +1,5 @@
 var netconf = require('../lib/netconf');
 var util = require('util');
-var process = require('process');
 var fs = require('fs');
 
 // example of multiple async requests
