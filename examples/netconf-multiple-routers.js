@@ -21,17 +21,19 @@ var router2 = new netconf.Client(param2);
 
 var routers = [ router1, router2 ];
 
-var filter = {
-    source: { running: { } },
-    filter: { configuration: { system: { 'host-name': {} } } }
+var rpcGet = {
+    'get-config': {
+        source: { running: null },
+        filter: { configuration: { system: { 'host-name': null } } }
+    }
 }
 
 routers.forEach(function (router) {
     router.open(function (err) {
         if (!err) {
-            router.rpc('get-config', filter, function(err, reply) {
+            router.rpc(rpcGet, function(err, reply) {
                 var hostname = reply.rpc_reply.data.configuration.system.host_name;
-                router.rpc('get-route-information', null, function(err, reply) {
+                router.rpc('get-route-information', function(err, reply) {
                     console.log(`------------ ${hostname} -------------`);
                     pprint(reply);
                     router.close();

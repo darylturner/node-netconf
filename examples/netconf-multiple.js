@@ -15,9 +15,9 @@ var router = new netconf.Client(params);
 router.open(function afterOpen(err) {
     if (!err) {
         console.log('request 1');
-        router.rpc('get-configuration', null, processResults);
+        router.rpc('get-configuration', processResults);
         console.log('request 2');
-        router.rpc('get-arp-table-information', null, processResults);
+        router.rpc('get-arp-table-information', processResults);
     } else {
         throw err;
     }

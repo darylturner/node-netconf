@@ -25,7 +25,7 @@ describe('core functions', function () {
         assert.ok(client.sessionID > 0);
     });
     it('should be able to send and receive rpc messages', function (done) {
-        client.rpc('get-software-information', null, function (err, reply) {
+        client.rpc('get-software-information', function (err, reply) {
             if (err) return done(err);
             var platform = reply.rpc_reply.software_information.package_information.name;
             return done(assert.ok(platform === 'junos'));
@@ -35,8 +35,7 @@ describe('core functions', function () {
         var interfaces = [ 'ge-0/0/0', 'ge-0/0/1' ];
         var results = 0;
         interfaces.forEach(function (int) {
-            client.rpc('get-interface-information',
-                { 'interface-name': [ int ], 'media': { } },
+            client.rpc({ 'get-interface-information': { 'interface-name': [ int ], 'media': null } },
                 function (err, reply) {
                     if (err) return done(err);
                     results += 1;

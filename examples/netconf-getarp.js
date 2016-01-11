@@ -27,7 +27,7 @@ router.open(function afterOpen(err) {
     if (!err) {
         // console.log(router.remoteCapabilities);
         // console.log(router.sessionID);
-        router.rpc('get-arp-table-information', null, processResults);
+        router.rpc('get-arp-table-information', processResults);
     } else {
         throw err;
     }
