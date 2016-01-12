@@ -150,7 +150,7 @@ Utility functions for common JunOS operations have been added to make working wi
 I'm happy to take pull requests for any added utility functions.
 
 Currently implemented are:
-commit, rollback, compare and load.
+commit, rollback, compare load and facts.
 
 **Commit**  
 Commit candidate configuration to device.
