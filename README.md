@@ -35,6 +35,17 @@ router.open(function afterOpen(err) {
 });
 ```
 Checkout examples on github for more usage examples.
+
+## Changes
+Note: SEMVER in use now out of the 0.x release.
+
+Version 0.2.0 to 1.0.0
+- rpc method breaks backwards compatibility with 0.2.0. See simple vs advanced usage below. The need for the 'null' argument has been removed in favour of explicitly passing an object.
+
+- Added facts() utility method.
+
+- Code improvements: jshint, jscs and mocha testing. VAsync added to remove deep nesting in open() function.
+
 ## Usage
 
 ### Connecting to endpoint
