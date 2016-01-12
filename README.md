@@ -12,7 +12,7 @@ Published to npm.
 npm install netconf
 
 ## Example
-```JavaScript
+```js
 
 var router = new netconf.Client({
     host: '172.28.128.3',
@@ -52,7 +52,7 @@ Version 0.2.0 to 1.0.0
 
 Create a new Client object by passing in the connection parameters via a JavaScript object. Both password and private key authentication methods are supported.
 
-```JavaScript
+```js
 var params = {
     host: '172.28.128.4',
     username: 'vagrant',
@@ -105,7 +105,7 @@ Examples of advanced usage can be found in the test suite, the examples and main
 Juniper make it very simple to find the XML-RPC equivalent of it's CLI commands.
 
 For example, the method used to gather chassis info can be found as such:
-```
+```xml
 user@router> show chassis hardware | display xml rpc
 <rpc-reply xmlns:junos="http://xml.juniper.net/junos/11.4R7/junos">
     <rpc>
@@ -119,13 +119,13 @@ user@router> show chassis hardware | display xml rpc
 ```
 
 This can be used to retrieve this information using NETCONF.
-```JavaScript
+```js
 router.rpc('get-chassis-inventory', function (err, reply) {
     ...
 })
 ```  
 And for gathering interface information:
-```
+```xml
 user@router> show interfaces ge-1/0/1 | display xml rpc
 <rpc-reply xmlns:junos="http://xml.juniper.net/junos/11.4R7/junos">
     <rpc>
@@ -138,7 +138,7 @@ user@router> show interfaces ge-1/0/1 | display xml rpc
     </cli>
 </rpc-reply>
 ```
-```JavaScript
+```js
 router.rpc({ 'get-interface-information': { 'interface-name': 'ge-1/0/1' } },
     function (err, reply) {
         ...
@@ -196,7 +196,7 @@ router.load(configData, callback);
 function (err, reply) {...}
 
 The default load options can be overridden by supplying an options object in the format:
-```JavaScript
+```js
 options = {
     config: configData, //required
     action: 'merge'|'replace'|'override'|'update'|'set', //default merge
