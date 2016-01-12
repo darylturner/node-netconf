@@ -13,20 +13,6 @@ npm install netconf
 
 ## Example
 ```JavaScript
-function pprint(object) {
-    console.log(util.inspect(object, {depth:null, colors:true}));
-}
-
-function processResults(err, reply) {
-    if (err) {
-        pprint(reply);
-        throw err;
-    } else {
-        var arpInfo = reply.rpc_reply.arp_table_information.arp_table_entry;
-        console.log(JSON.stringify(arpInfo));
-        router.close();
-    }
-}
 
 var router = new netconf.Client({
     host: '172.28.128.3',
@@ -36,9 +22,15 @@ var router = new netconf.Client({
 
 router.open(function afterOpen(err) {
     if (!err) {
-        router.rpc('get-arp-table-information', null, processResults);
+        router.rpc('get-arp-table-information', function (err, reply) {
+            router.close();
+            if (err) {
+                throw (err);
+            }
+            console.log(JSON.stringify(reply));
+        });
     } else {
-        throw err;
+        throw (err);
     }
 });
 ```
@@ -80,14 +72,68 @@ The callback function will be called once the SSH and NETCONF session has connec
 
 Requests are sent using the .rpc() method.
 
+**Simple Requests**  
 *Function*  
-router.rpc('request', args, callback);  
+router.rpc('request', callback);  
 *Callback*  
 function (err, reply) {...}
 
-An XML-RPC request is constructed from the request string and the args object. The request string will be passed as the NETCONF method such as get, get-config, etc. The args object is passed to the xml2js builder to form any arguments and filters to the main request or can be set to null if not used.
+For simple requests where only a NETCONF method is required with no arguments, then the method can be passed as a string. The string will be used to create the xml2js object dynamically.
 
 A message-id is automatically added to the request and the callback function will be invoked once the corresponding reply has been received.
+
+**Advanced Usage**  
+*Function*  
+router.rpc({ request: { arg1: 'value', arg2: 'value' } }, callback);
+
+For advanced usage where arguments are required to the NETCONF method then an object can be passed directly to the xml2js builder. The message-id will be automatically added.
+
+Examples of advanced usage can be found in the test suite, the examples and main library.
+
+**JunOS Tips**  
+Juniper make it very simple to find the XML-RPC equivalent of it's CLI commands.
+
+For example, the method used to gather chassis info can be found as such:
+```
+user@router> show chassis hardware | display xml rpc
+<rpc-reply xmlns:junos="http://xml.juniper.net/junos/11.4R7/junos">
+    <rpc>
+        <get-chassis-inventory>
+        </get-chassis-inventory>
+    </rpc>
+    <cli>
+        <banner></banner>
+    </cli>
+</rpc-reply>
+```
+
+This can be used to retrieve this information using NETCONF.
+```JavaScript
+router.rpc('get-chassis-inventory', function (err, reply) {
+    ...
+})
+```  
+And for gathering interface information:
+```
+user@router> show interfaces ge-1/0/1 | display xml rpc
+<rpc-reply xmlns:junos="http://xml.juniper.net/junos/11.4R7/junos">
+    <rpc>
+        <get-interface-information>
+                <interface-name>ge-1/0/1</interface-name>
+        </get-interface-information>
+    </rpc>
+    <cli>
+        <banner></banner>
+    </cli>
+</rpc-reply>
+```
+```JavaScript
+router.rpc({ 'get-interface-information': { 'interface-name': 'ge-1/0/1' } },
+    function (err, reply) {
+        ...
+    }
+);
+```
 
 ### Closing the session
 
