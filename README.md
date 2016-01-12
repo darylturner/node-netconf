@@ -34,12 +34,12 @@ router.open(function afterOpen(err) {
     }
 });
 ```
-## Usage
 Checkout examples on github for more usage examples.
+## Usage
 
 ### Connecting to endpoint
 
-Create a new Client object and pass in the connection parameters via a JavaScript object. Both password and private key authentication methods are supported.
+Create a new Client object by passing in the connection parameters via a JavaScript object. Both password and private key authentication methods are supported.
 
 ```JavaScript
 var params = {
@@ -196,3 +196,13 @@ and called as such:
 
 *Function*  
 router.load(options, callback)
+
+**Facts**  
+The facts method collects some useful information from several RPC calls and presents the results back as a JavaScript object.
+
+The following is collected: hostname, uptime, model, serial number and software version.  
+
+*Function*  
+router.facts(callback) {...}  
+*Callback*  
+function (err, facts)
