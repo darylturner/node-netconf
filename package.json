@@ -1,6 +1,6 @@
 {
   "name": "netconf",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Pure JavaScript NETCONF library.",
   "main": "lib/netconf.js",
   "directories": {
@@ -18,7 +18,10 @@
     "netconf",
     "juniper"
   ],
-  "author": { "name": "Daryl Turner", "email": "daryl@layer-eight.uk" },
+  "author": {
+    "name": "Daryl Turner",
+    "email": "daryl@layer-eight.uk"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/darylturner/node-netconf/issues"
