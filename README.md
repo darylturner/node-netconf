@@ -161,7 +161,7 @@ Utility functions for common JunOS operations have been added to make working wi
 I'm happy to take pull requests for any added utility functions.
 
 Currently implemented are:
-commit, rollback, compare load and facts.
+commit, rollback, compare, load and facts.
 
 **Commit**  
 Commit candidate configuration to device.
@@ -188,7 +188,7 @@ router.compare(callback);
 function (err, diff) {...}
 
 **Load**  
-Load configuration data into candidate-config using netconf. Default options are equivalent to "load merge" and would expect configuration data in JunOS curly-brace format.
+Load configuration data into candidate-config using NETCONF. Default options are equivalent to "load merge" and would expect configuration data in JunOS curly-brace format.
 
 *Function*  
 router.load(configData, callback);  
