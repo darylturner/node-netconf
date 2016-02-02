@@ -1,7 +1,9 @@
 # node-netconf
 Pure JavaScript NETCONF library for Node.js
 
-Managing the streams and events is taken care of by the module and exposes core functions via requests and callbacks.
+This module was created to abstract the events and streams away from handling a NETCONF session in Node.js. Event management, message IDs and associating requests with replies is taken care of by the module and exposes core functions via requests and callbacks.
+
+The core parts of the code focus on the transport and messaging layers. The operation layer is implemented as wrapper functions and can be easily expanded.
 
 Multiple endpoints are supported and multiple asynchronous non-blocking requests can be made to each client.
 
@@ -37,7 +39,12 @@ router.open(function afterOpen(err) {
 Checkout examples on github for more usage examples.
 
 ## Changes
-Note: SEMVER in use now out of the 0.x release.
+Version 1.1.0
+
+ - Cleaned up reply object values by changing xml2js parsing options.
+These options are now exposed via the client object under ".parseOpts" and can be tweaked to suit individual applications.
+
+See xml2js documentation for different parsing options.
 
 Version 0.2.0 to 1.0.0
 - rpc method breaks backwards compatibility with 0.2.0. See simple vs advanced usage below. The need for the 'null' argument has been removed in favour of explicitly passing an object.
