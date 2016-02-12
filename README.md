@@ -41,17 +41,20 @@ Checkout examples on github for more usage examples.
 ## Changes
 Version 1.1.0
 
- - Cleaned up reply object values by changing xml2js parsing options.
-These options are now exposed via the client object under ".parseOpts" and can be tweaked to suit individual applications.
+- Parsing options are now exposed via the client object under ```.parseOpts``` and can be overridden to suit individual applications.  ``` .parseOpts.ignoreAttrs = true ``` may be helpful in tidying up replies with lots of un-needed XML attributes.
 
-See xml2js documentation for different parsing options.
+See xml2js documentation for different parsing options. https://www.npmjs.com/package/xml2js
+
+- Fixed parsing issue where empty tags show as ```'\n '```. These are now overridden to show ```true``` by default. This can be changed by setting ```.parseOpts.emptyTag``` to desired value.
+
+- Re-implemented reply handling to be more efficient.
 
 Version 0.2.0 to 1.0.0
 - rpc method breaks backwards compatibility with 0.2.0. See simple vs advanced usage below. The need for the 'null' argument has been removed in favour of explicitly passing an object.
 
 - Added facts() utility method.
 
-- Code improvements: jshint, jscs and mocha testing. VAsync added to remove deep nesting in open() function.
+- Code improvements: jshint, jscs and mocha testing. vasync added to remove deep nesting in open() function.
 
 ## Usage
 
