@@ -11,6 +11,7 @@ var router = new netconf.Client({
     username: 'vagrant',
     pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
 });
+router.parseOpts.ignoreAttrs = true;
 
 router.open(function afterOpen(err) {
     if (!err) {
