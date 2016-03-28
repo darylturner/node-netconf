@@ -7,11 +7,7 @@ The core parts of the code focus on the transport and messaging layers. The oper
 
 Multiple endpoints are supported and multiple asynchronous non-blocking requests can be made to each client.
 
-## Installation
-
-Published to npm.
-
-npm install netconf
+Developed/tested against Juniper devices.
 
 ## Example
 ```js
@@ -19,48 +15,35 @@ npm install netconf
 var router = new netconf.Client({
     host: '172.28.128.3',
     username: 'vagrant',
-    pkey: fs.readFileSync('insecure_ssh.key', {encoding: 'utf8'})
+    pkey: fs.readFileSync('insecure_ssh.key', { encoding: 'utf8' })
 });
 
 router.open(function afterOpen(err) {
     if (!err) {
         router.rpc('get-arp-table-information', function (err, reply) {
             router.close();
-            if (err) {
-                throw (err);
-            }
+            if (err) { throw (err); }
             console.log(JSON.stringify(reply));
         });
-    } else {
-        throw (err);
-    }
+    } else { throw (err); }
 });
 ```
 Checkout examples on github for more usage examples.
-
-## Changes
-Version 1.1.0
-
-- Parsing options are now exposed via the client object under ```.parseOpts``` and can be overridden to suit individual applications.  ``` .parseOpts.ignoreAttrs = true ``` may be helpful in tidying up replies with lots of un-needed XML attributes.
-
-See xml2js documentation for different parsing options. https://www.npmjs.com/package/xml2js
-
-- Fixed parsing issue where empty tags show as ```'\n '```. These are now overridden to show ```true``` by default. This can be changed by setting ```.parseOpts.emptyTag``` to desired value.
-
-- Re-implemented reply handling to be more efficient.
-
-Version 0.2.0 to 1.0.0
-- rpc method breaks backwards compatibility with 0.2.0. See simple vs advanced usage below. The need for the 'null' argument has been removed in favour of explicitly passing an object.
-
-- Added facts() utility method.
-
-- Code improvements: jshint, jscs and mocha testing. vasync added to remove deep nesting in open() function.
 
 ## Usage
 
 ### Connecting to endpoint
 
 Create a new Client object by passing in the connection parameters via a JavaScript object. Both password and private key authentication methods are supported.
+
+The NETCONF session can then be opened using the ```.open()``` method.
+
+*Function*   
+router.open(callback);  
+*Callback*  
+function (err) {...}
+
+The callback function will be called once the SSH and NETCONF session has connected and hello and capability messages have been exchanged. The only argument passed to the callback function is an error instance.
 
 ```js
 var params = {
@@ -80,18 +63,9 @@ router.open(function onOpen(err) {
 });
 ```
 
-The NETCONF session can then be opened using the .open() method.
-
-*Function*   
-router.open(callback);  
-*Callback*  
-function (err) {...}
-
-The callback function will be called once the SSH and NETCONF session has connected and hello and capability messages have been exchanged. The only argument passed to the callback function is an error instance.
-
 ### Sending requests
 
-Requests are sent using the .rpc() method.
+Requests are sent using the ```.rpc()``` method.
 
 **Simple Requests**  
 *Function*  
@@ -111,7 +85,7 @@ For advanced usage where arguments are required to the NETCONF method then an ob
 
 Examples of advanced usage can be found in the test suite, the examples and main library.
 
-**JunOS Tips**  
+**JunOS Examples**  
 Juniper make it very simple to find the XML-RPC equivalent of it's CLI commands.
 
 For example, the method used to gather chassis info can be found as such:
@@ -158,12 +132,23 @@ router.rpc({ 'get-interface-information': { 'interface-name': 'ge-1/0/1' } },
 
 ### Closing the session
 
-The session can be gracefully closed using the .close() method.
+The session can be gracefully closed using the ```.close()``` method.
 
 *Function*   
 router.close([callback]);  
 *Callback*  
 function (err) {...}
+
+### Options
+
+**XML Parsing**  
+xml2js parsing options can be viewed/modified via ```.parseOpts``` in the client object.
+The default options (I believe) should cover most use cases.  
+See xml2js documentation for different parsing options. https://www.npmjs.com/package/xml2js
+
+**Raw XML**  
+The raw response from the server can be included by setting ```.raw = true``` in the client object.  
+The raw XML will be embedded in the reply message under ```reply.raw```.
 
 ### Utility functions
 
