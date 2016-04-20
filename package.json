@@ -1,6 +1,6 @@
 {
   "name": "netconf",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Pure JavaScript NETCONF library.",
   "main": "lib/netconf.js",
   "directories": {
