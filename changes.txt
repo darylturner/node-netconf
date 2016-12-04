@@ -1,0 +1,5 @@
+Major version bump due to change in return value (error structure).
+
+Version 2:
+- Create custom rpcError type and embed returned message in that instead of sending both. The old behaviour breaks some promise libraries.
+- Replaced use of var with const and let.
