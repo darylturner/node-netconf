@@ -52,6 +52,17 @@ describe('core functions', function () {
             );
         });
     });
+    it('should raise a rpcError for bad RPC methods', function (done) {
+        client.rpc('get-foobarbaz', (err, reply) => {
+            assert.ok(!reply, 'reply should be empty');
+            if (err) {
+                assert.ok(err.name === 'rpcError', err);
+            } else {
+                 return done(Error('rpcError not found on bad method'));
+            }
+            return done();
+        });
+    });
     after(function closeConnection(done) {
         client.close(done);
     });
