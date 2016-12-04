@@ -12,21 +12,26 @@ Developed/tested against Juniper devices.
 ## Example
 ```js
 
-var router = new netconf.Client({
+const router = new netconf.Client({
     host: '172.28.128.3',
     username: 'vagrant',
     pkey: fs.readFileSync('insecure_ssh.key', { encoding: 'utf8' })
-});
+})
 
-router.open(function afterOpen(err) {
-    if (!err) {
-        router.rpc('get-arp-table-information', function (err, reply) {
-            router.close();
-            if (err) { throw (err); }
-            console.log(JSON.stringify(reply));
-        });
-    } else { throw (err); }
-});
+router.open((err) => {
+    if (err) {
+        throw err;
+    }
+
+    router.rpc('get-arp-table-information', (err, reply) => {
+        if (err) {
+            throw err;
+        }
+
+        router.close()
+        console.log(JSON.stringify(reply))
+    })
+})
 ```
 Checkout examples on github for more usage examples.
 
@@ -46,21 +51,19 @@ function (err) {...}
 The callback function will be called once the SSH and NETCONF session has connected and hello and capability messages have been exchanged. The only argument passed to the callback function is an error instance.
 
 ```js
-var params = {
+const router = new netconf.Client({
     host: '172.28.128.4',
     username: 'vagrant',
     password: null,
     pkey: privateKey
-};
-var router = new netconf.Client(params);
+})
 
-router.open(function onOpen(err) {
+router.open((err) => {
     if (err) {
-        throw err;
-    } else {
-        console.log('Connected');
+        throw err
     }
-});
+    console.log('Connected')
+})
 ```
 
 ### Sending requests
@@ -104,7 +107,7 @@ user@router> show chassis hardware | display xml rpc
 
 This can be used to retrieve this information using NETCONF.
 ```js
-router.rpc('get-chassis-inventory', function (err, reply) {
+router.rpc('get-chassis-inventory', (err, reply) => {
     ...
 })
 ```  
@@ -123,11 +126,10 @@ user@router> show interfaces ge-1/0/1 | display xml rpc
 </rpc-reply>
 ```
 ```js
-router.rpc({ 'get-interface-information': { 'interface-name': 'ge-1/0/1' } },
-    function (err, reply) {
+router.rpc({ 'get-interface-information': { 'interface-name': 'ge-1/0/1' } }, (err, reply) => {
         ...
     }
-);
+)
 ```
 
 ### Closing the session
@@ -196,7 +198,7 @@ options = {
     config: configData, //required
     action: 'merge'|'replace'|'override'|'update'|'set', //default merge
     format: 'text'|'xml' //default text
-};
+}
 ```
 and called as such:
 
