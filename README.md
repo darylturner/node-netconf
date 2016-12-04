@@ -24,11 +24,11 @@ router.open((err) => {
     }
 
     router.rpc('get-arp-table-information', (err, reply) => {
+        router.close()
         if (err) {
             throw err;
         }
 
-        router.close()
         console.log(JSON.stringify(reply))
     })
 })
