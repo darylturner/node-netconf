@@ -41,7 +41,7 @@ function commitRollback(value) {
     if (value === true) {
         console.log('Commiting configuration.');
         router.commit(function(err, result) {
-           if (err) {
+           if (result.rpc_reply.commit_results.routing_engine.rpc_error) {
                router.rollback(function (err, rollback_result) {
                    pprint(result);
                    console.log('Commit error, rolling back.')
