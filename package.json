@@ -1,6 +1,6 @@
 {
   "name": "netconf",
-  "version": "2.0.1",
+  "version": "1.0.0",
   "description": "Pure JavaScript NETCONF library.",
   "main": "lib/netconf.js",
   "directories": {
@@ -11,16 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/darylturner/node-netconf.git"
+    "url": "git+https://github.com/jean1880/node-netconf.git"
   },
   "keywords": [
     "xml-rpc",
-    "netconf",
-    "juniper"
+    "netconf"
   ],
   "author": {
-    "name": "Daryl Turner",
-    "email": "daryl@layer-eight.uk"
+    "name": "Jean-Luc Desroches",
+    "email": "jean18801880@gmail.com"
   },
   "license": "ISC",
   "bugs": {
@@ -31,5 +30,5 @@
     "xml2js": "^0.4.15",
     "vasync": "^1.6.3"
   },
-  "homepage": "https://github.com/darylturner/node-netconf#readme"
+  "homepage": "https://github.com/jean1880/node-netconf#readme"
 }

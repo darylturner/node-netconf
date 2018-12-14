@@ -7,8 +7,6 @@ The core parts of the code focus on the transport and messaging layers. The oper
 
 Multiple endpoints are supported and multiple asynchronous non-blocking requests can be made to each client.
 
-Developed/tested against Juniper devices.
-
 ## Example
 ```js
 
@@ -151,66 +149,3 @@ See xml2js documentation for different parsing options. https://www.npmjs.com/pa
 **Raw XML**  
 The raw response from the server can be included by setting ```.raw = true``` in the client object.  
 The raw XML will be embedded in the reply message under ```reply.raw```.
-
-### Utility functions
-
-Utility functions for common JunOS operations have been added to make working with these devices easier.
-I'm happy to take pull requests for any added utility functions.
-
-Currently implemented are:
-commit, rollback, compare, load and facts.
-
-**Commit**  
-Commit candidate configuration to device.
-
-*Function*  
-router.commit(callback);  
-*Callback*  
-function (err, reply) {...}
-
-**Rollback**  
-Discard candidate configuration on device.
-
-*Function*  
-router.rollback(callback);  
-*Callback*  
-function (err, reply) {...}
-
-**Compare**  
-Show difference between running and candidate-config. Equivalent to "show | compare".
-
-*Function*  
-router.compare(callback);  
-*Callback*  
-function (err, diff) {...}
-
-**Load**  
-Load configuration data into candidate-config using NETCONF. Default options are equivalent to "load merge" and would expect configuration data in JunOS curly-brace format.
-
-*Function*  
-router.load(configData, callback);  
-*Callback*  
-function (err, reply) {...}
-
-The default load options can be overridden by supplying an options object in the format:
-```js
-options = {
-    config: configData, //required
-    action: 'merge'|'replace'|'override'|'update'|'set', //default merge
-    format: 'text'|'xml' //default text
-}
-```
-and called as such:
-
-*Function*  
-router.load(options, callback)
-
-**Facts**  
-The facts method collects some useful information from several RPC calls and presents the results back as a JavaScript object.
-
-The following is collected: hostname, uptime, model, serial number and software version.  
-
-*Function*  
-router.facts(callback) {...}  
-*Callback*  
-function (err, facts)
