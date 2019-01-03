@@ -1,5 +1,5 @@
 {
-  "name": "netconf",
+  "name": "node-netconf",
   "version": "1.0.0",
   "description": "Pure JavaScript NETCONF library.",
   "main": "lib/netconf.js",
