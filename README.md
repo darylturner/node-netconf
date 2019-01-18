@@ -48,7 +48,6 @@ Exposed configuration options are:
  - password                  Password to authenticate with
  - pkey                      Private key to authenticate with
  - port                      Port to connect with (DEFAULT: 22)
- - sessionID                 Session ID to use for connection session (DEFAULT: Assigned by netconf)
 
 *Function*   
 router.open(callback);  
