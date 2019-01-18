@@ -43,12 +43,12 @@ The NETCONF session can then be opened using the ```.open()``` method.
 
 Exposed configuration options are:
 
-    - {required} host           URL target to connect to
-    - {required} username       Username to authenticate with
-    - password                  Password to authenticate with
-    - pkey                      Private key to authenticate with
-    - port                      Port to connect with (DEFAULT: 22)
-    - sessionID                 Session ID to use for connection session (DEFAULT: Assigned by netconf)
+ - {required} host           URL target to connect to
+ - {required} username       Username to authenticate with
+ - password                  Password to authenticate with
+ - pkey                      Private key to authenticate with
+ - port                      Port to connect with (DEFAULT: 22)
+ - sessionID                 Session ID to use for connection session (DEFAULT: Assigned by netconf)
 
 *Function*   
 router.open(callback);  
