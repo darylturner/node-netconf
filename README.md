@@ -42,6 +42,7 @@ Create a new Client object by passing in the connection parameters via a JavaScr
 The NETCONF session can then be opened using the ```.open()``` method.
 
 Exposed configuration options are:
+
     - {required} host           URL target to connect to
     - {required} username       Username to authenticate with
     - password                  Password to authenticate with
