@@ -1,6 +1,6 @@
 {
   "name": "node-netconf",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Pure JavaScript NETCONF library.",
   "main": "lib/netconf.js",
   "directories": {
@@ -26,9 +26,9 @@
     "url": "https://github.com/darylturner/node-netconf/issues"
   },
   "dependencies": {
-    "ssh2": "^0.4.12",
-    "xml2js": "^0.4.15",
-    "vasync": "^1.6.3"
+    "ssh2": "^0.8.9",
+    "xml2js": "^0.4.23",
+    "vasync": "^2.2.0"
   },
   "homepage": "https://github.com/jean1880/node-netconf#readme"
 }
