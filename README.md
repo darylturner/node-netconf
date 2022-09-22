@@ -9,6 +9,8 @@ Multiple endpoints are supported and multiple asynchronous non-blocking requests
 
 Developed/tested against Juniper devices.
 
+## ARCHIVED. This package is no longer maintained. Dependencies are quite out of date and I do not recommend using this package directly. If no alternatives are available please fork and update package.json dependencies. Some require a major version bump and their APIs may have changed.
+
 ## Example
 ```js
 
